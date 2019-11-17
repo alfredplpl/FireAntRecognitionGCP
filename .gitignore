@@ -1,6 +1,11 @@
 # Auth code
 AuthKey.py
 
+# local data
+uploads/
+*.zip
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
