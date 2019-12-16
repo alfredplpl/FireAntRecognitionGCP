@@ -1,5 +1,13 @@
 # Auth code
-AuthKey.py
+Params.py
+
+projectkey.json
+
+
+# local data
+uploads/
+*.zip
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
