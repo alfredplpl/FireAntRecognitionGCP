@@ -30,11 +30,7 @@ def recognize(request):
             import Params
             import json
             import requests
-
-            from google.cloud import automl_v1beta1
-            from google.cloud.automl_v1beta1.proto import service_pb2
-            from google.cloud.automl_v1beta1.gapic import enums
-
+            import traceback
 
             # ペイロードの作成。 実はBase64にエンコードしておかないといけないらしい
             img_array = np.asarray(bytearray(file.stream.read()), dtype=np.uint8)
@@ -42,23 +38,29 @@ def recognize(request):
             img= cv2.resize(img,(640,480))
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 80]
             result, encimg = cv2.imencode(".jpg",img, encode_param)
-            imageString = base64.b64encode(bytearray(encimg))
-            imageString=imageString.decode()
+            imageBin = base64.b64encode(bytearray(encimg))
+            imageString=imageBin.decode()
 
-            payload =  {
-                "image": {
-                    "imageBytes": imageString
-                }
-            }
+            try:
+                from google.cloud import automl_v1beta1
+                payload = {'image': {'image_bytes': imageString}}
+                client = automl_v1beta1.AutoMlClient.from_service_account_json('projectkey.json')
+                prediction_client = automl_v1beta1.PredictionServiceClient.from_service_account_json('projectkey.json')
 
-            client = automl_v1beta1.AutoMlClient.from_service_account_json('key-file')
-            prediction_client = automl_v1beta1.PredictionServiceClient.from_service_account_json('key-file')
-
-
-            url="https://automl.googleapis.com/v1beta1/projects/479232824532/locations/{region}/models/{model}:predict"
-            url=url.format(region=Params.compute_region,model=Params.model_id)
-            headers = {"Authorization": "Bearer " + Params.AuthToken,"Content-Type": "application/json"}
-            response=requests.post(url, data=json.dumps(payload),headers=headers)
+                params = {"score_threshold": bytes(b'0.5')}
+                model_full_id = client.model_path(Params.project_id, Params.compute_region, Params.model_id)
+                response = prediction_client.predict(model_full_id, payload, params)
+            except:
+                with open("./htmls/resultTrue.html", "r") as f:
+                    # 画像を含んだ結果をHTMLに埋め込む
+                    resultHTML = f.read()
+                    resultHTML = resultHTML.format(image_string=imageString, class_name=traceback.format_exc(), score="aa")
+                    # response.classification.score
+                    return resultHTML
+            #url="https://automl.googleapis.com/v1beta1/projects/479232824532/locations/{region}/models/{model}:predict"
+            #url=url.format(region=Params.compute_region,model=Params.model_id)
+            #headers = {"Authorization": "Bearer " + Params.AuthToken,"Content-Type": "application/json"}
+            #response=requests.post(url, data=json.dumps(payload),headers=headers)
 
             with open("./htmls/resultTrue.html", "r") as f:
                 # 画像を含んだ結果をHTMLに埋め込む
