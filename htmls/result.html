@@ -1,21 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>判定結果</title>
-</head>
-<body>
-<h1>判定結果</h1>
-<img src="data:image/jpeg;base64,{image_string}" />
-<br>
-<p>
-    この画像に写っているアリはヒアリで<b>{result}</b>可能性があります。
-    ただし、本サービスは簡易判定であるため、誤判定であるかもしれません。
-    心配であるならば、<a href=https://www.env.go.jp/nature/intro/2outline/attention/05_contact/index.html>環境省のサイト</a>をご覧の上ご対応ください。
-</p>
-<a href=https://alfredplpl.github.io/fireant/index.html>ホームページに戻る</a>
-<h2>詳細情報</h2>
-<p>判定結果:{class_name}</p>
-<p>スコア:{score}</p>
-</body>
+<html lang="jp">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="upload image.">
+        <meta name="author" content="alfredplpl">
+
+        <title>ヒアリ画像判定サービス</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="https://alfredplpl.github.io/fireant/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap theme -->
+        <link href="https://alfredplpl.github.io/fireant/css/bootstrap-theme.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="https://alfredplpl.github.io/fireant/css/theme.css" rel="stylesheet">
+
+    </head>
+    <body>
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="https://alfredplpl.github.io/fireant/index.html">Fire Ant Recognition</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li ><a href="https://alfredplpl.github.io/fireant/index.html">Home</a></li>
+                <li ><a href="https://alfredplpl.github.io/fireant/contact.html">Contact</a></li>
+                <li ><a href="https://alfredplpl.github.io/fireant/acknowledgement.html">Acknowledgement</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
+        <div class="container theme-showcase" role="main">
+          <br>
+            <h1>判定結果</h1>
+            <img src="data:image/jpeg;base64,{image_string}" />
+            <br>
+            <p>
+                この画像に写っているアリはヒアリで<b>{result}</b>可能性があります。
+                ただし、本サービスは簡易判定であるため、誤判定であるかもしれません。
+                心配であるならば、<a href=https://www.env.go.jp/nature/intro/2outline/attention/05_contact/index.html>環境省のサイト</a>をご覧の上ご対応ください。
+            </p>
+            <a href=https://alfredplpl.github.io/fireant/index.html>ホームページに戻る</a>
+            <h2>詳細情報</h2>
+            <p>判定結果:{class_name}</p>
+            <p>スコア:{score}</p>
+            <footer>
+              <p>&copy; 2017-2019 Alfred Increment (alfredplpl) powered by Bootstrap.</p>
+            </footer>
+        </div>
+    </body>
 </html>

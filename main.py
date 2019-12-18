@@ -14,7 +14,7 @@ def recognize(request):
                 resultHTML=resultHTML.format(reason="ファイルが取得できないため")
             return resultHTML
 
-        # データの取り出し
+        # ファイルに関するデータの取り出し
         file = request.files['image']
 
         # ファイル名がなかった時の処理
@@ -29,47 +29,45 @@ def recognize(request):
             import base64
             import cv2
             import numpy as np
-            import traceback
 
+            # 非公開なパラメータを入れておくところ
             import Params
 
             from google.cloud import automl_v1beta1
 
-            try:
-                # ペイロードの作成。 実はBase64にエンコードしておかないといけないらしい
-                img_array = np.asarray(bytearray(file.stream.read()), dtype=np.uint8)
-                img = cv2.imdecode(img_array, 1)
-                img= cv2.resize(img,(640,480))
-                encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 80]
-                result, encimg = cv2.imencode(".jpeg",img, encode_param)
-                imageBin = base64.b64encode(bytes(encimg))
-                imageString=imageBin.decode()
+            # ペイロードの作成。大きすぎる画像をリサイズ。
+            img_array = np.asarray(bytearray(file.stream.read()), dtype=np.uint8)
+            img = cv2.imdecode(img_array, 1)
+            if(img.shape[1]>640):
+                img= cv2.resize(img,(640,img.shape[0]*640/img.shape[1]))
+            encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 85]
+            result, encimg = cv2.imencode(".jpeg",img, encode_param)
 
-                payload = {'image': {'image_bytes': bytes(encimg)}}
-                client = automl_v1beta1.AutoMlClient.from_service_account_json('projectkey.json')
-                prediction_client = automl_v1beta1.PredictionServiceClient.from_service_account_json('projectkey.json')
+            # GoogleのAPIはbytes、表示するHTMLはbase64の文字列でないといけないらしい
+            imageBin = base64.b64encode(bytes(encimg))
+            imageString=imageBin.decode()
 
-                params = {"score_threshold": bytes(b'0.5')}
-                model_full_id = client.model_path(Params.project_id, Params.compute_region, Params.model_id)
-                response = prediction_client.predict(model_full_id, payload,params)
-                response=response.payload[0]
+            payload = {'image': {'image_bytes': bytes(encimg)}}
+            client = automl_v1beta1.AutoMlClient.from_service_account_json(Params.keypath)
+            prediction_client = automl_v1beta1.PredictionServiceClient.from_service_account_json(Params.keypath)
 
-                with open("./htmls/result.html", "r") as f:
-                    # 画像を含んだ結果をHTMLに埋め込む
-                    resultHTML = f.read()
-                    resultString="ある" if response.display_name=="fire_ant" else "ない"
-                    resultHTML = resultHTML.format(image_string=imageString, class_name=response.display_name,
-                                                   score=response.classification.score,result=resultString)
-                    # response.classification.score
-                    return resultHTML
+            params = {"score_threshold": bytes(b'0.5')}
+            model_full_id = client.model_path(Params.project_id, Params.compute_region, Params.model_id)
+            response = prediction_client.predict(model_full_id, payload,params)
 
-            except:
-                with open("./htmls/result.html", "r") as f:
-                    # 画像を含んだ結果をHTMLに埋め込む
-                    resultHTML = f.read()
-                    resultHTML = resultHTML.format(image_string=imageString, class_name=traceback.format_exc(), score="aa",result="ある")
-                    # response.classification.score
-                    return resultHTML
+            # 地味にここがミソでクラスの詳細がドキュメントにかかれていないので苦労した
+            response=response.payload[0]
+
+            with open("./htmls/result.html", "r") as f:
+                # 画像を含んだ結果をHTMLに埋め込む
+                # 画像を埋め込んだ理由はCloud FunctionsからStorageにアップロードできないように作られているためである
+                # （不正なアップローダー防止の対策とはいえ、めんどくさい仕様だ・・・
+                resultHTML = f.read()
+                resultString="ある" if response.display_name=="fire_ant" else "ない"
+                resultHTML = resultHTML.format(image_string=imageString, class_name=response.display_name,
+                                               score=response.classification.score,result=resultString)
+
+                return resultHTML
 
     # GETなどの例外処理
     with open("./htmls/error.html", "r") as f:
