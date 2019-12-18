@@ -3,6 +3,8 @@ Params.py
 
 projectkey.json
 
+*.jpg
+*.jpeg
 
 # local data
 uploads/

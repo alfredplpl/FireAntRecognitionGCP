@@ -43,26 +43,21 @@
         </nav>
         <div class="container theme-showcase" role="main">
           <br>
-            <h1>判定に失敗しました</h1>
+            <h1>判定結果</h1>
+            <img src="data:image/jpeg;base64,{image_string}" />
+            <br>
             <p>
-                <a href=https://alfredplpl.github.io/fireant/index.html>ホームページ</a>から画像をもう一度投稿してください。
+                この画像に写っているアリはヒアリで<b>{result}</b>可能性があります。
+                ただし、本サービスは簡易判定であるため、誤判定であるかもしれません。
+                心配であるならば、<a href=https://www.env.go.jp/nature/intro/2outline/attention/05_contact/index.html>環境省のサイト</a>をご覧の上ご対応ください。
             </p>
-            <h2>判定に失敗した理由</h2>
-            <p>{reason}</p>
+            <a href=https://alfredplpl.github.io/fireant/index.html>ホームページに戻る</a>
+            <h2>詳細情報</h2>
+            <p>判定結果:{class_name}</p>
+            <p>スコア:{score}</p>
             <footer>
               <p>&copy; 2017-2019 Alfred Increment (alfredplpl) powered by Bootstrap.</p>
             </footer>
         </div>
     </body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>エラー画面</title>
-</head>
-<body>
-
-</body>
 </html>
