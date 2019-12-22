@@ -3,7 +3,6 @@ Params.py
 projectkey.json
 
 # local data
-uploads/
 *.zip
 *.jpg
 *.jpeg
