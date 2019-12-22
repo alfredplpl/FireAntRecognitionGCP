@@ -2,7 +2,7 @@ __author__ = "Alfred Increment"
 __version__ = "0.0.1"
 __license__ = "Apache License 2.0"
 
-def recognize(request):
+def recognizeByAutoMLVision(request):
     # リクエストがポストかどうかの判別
     if request.method == 'POST':
         # ファイルがなかった場合の処理

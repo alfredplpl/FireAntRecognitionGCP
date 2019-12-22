@@ -1,0 +1,7 @@
+.gcloudignore
+.gitignore
+#!include:.gitignore
+README.md
+ParamsDummy.py
+!Params.py
+!projectkey.json
