@@ -1,3 +1,7 @@
+__author__ = "Alfred Increment"
+__version__ = "0.0.1"
+__license__ = "Apache License 2.0"
+
 import base64
 import cv2
 import numpy as np

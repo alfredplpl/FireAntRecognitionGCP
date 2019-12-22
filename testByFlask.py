@@ -2,6 +2,15 @@ __author__ = "Alfred Increment"
 __version__ = "0.0.1"
 __license__ = "Apache License 2.0"
 
+from flask import Flask, request
+
+app = Flask(__name__)
+
+# ファイルを受け取る方法の指定
+@app.route('/',methods=["POST"])
+def serve():
+    return recognize(request.get_data())
+
 def recognize(request):
     # リクエストがポストかどうかの判別
     if request.method == 'POST':
@@ -31,8 +40,6 @@ def recognize(request):
             # 非公開なパラメータを入れておくところ
             import Params
 
-            from google.cloud import automl_v1beta1
-
             # ペイロードの作成。大きすぎる画像をリサイズ。
             img_array = np.asarray(bytearray(file.stream.read()), dtype=np.uint8)
             img = cv2.imdecode(img_array, 1)
@@ -41,20 +48,12 @@ def recognize(request):
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 85]
             result, encimg = cv2.imencode(".jpeg",img, encode_param)
 
-            # GoogleのAPIはbytes、表示するHTMLはbase64の文字列でないといけないらしい
+            # 画像をはbase64にエンコードしておく
             imageBin = base64.b64encode(bytes(encimg))
             imageString=imageBin.decode()
 
-            payload = {'image': {'image_bytes': bytes(encimg)}}
-            client = automl_v1beta1.AutoMlClient.from_service_account_json(Params.keypath)
-            prediction_client = automl_v1beta1.PredictionServiceClient.from_service_account_json(Params.keypath)
-
-            params = {"score_threshold": bytes(b'0.5')}
-            model_full_id = client.model_path(Params.project_id, Params.compute_region, Params.model_id)
-            response = prediction_client.predict(model_full_id, payload,params)
-
-            # 地味にここがミソでクラスの詳細がドキュメントにかかれていないので苦労した
-            response=response.payload[0]
+            #ToDo: Predict class
+            response=None
 
             with open("./htmls/result.html", "r") as f:
                 # 画像を含んだ結果をHTMLに埋め込む
@@ -73,7 +72,11 @@ def recognize(request):
         resultHTML = resultHTML.format(reason="想定されていないため")
         return resultHTML
 
-# 参考URL
+if __name__ == '__main__':
+    app.run()
+
+# References
+# https://a2c.bitbucket.io/flask/
 # https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
 # https://cloud.google.com/vision/automl/docs/base64?hl=ja
 # https://cloud.google.com/vision/automl/docs/predict?hl=ja#automl-nl-example-python
