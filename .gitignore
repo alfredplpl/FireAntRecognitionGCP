@@ -1,14 +1,14 @@
 # Auth code
 Params.py
-
 projectkey.json
-
-*.jpg
-*.jpeg
 
 # local data
 uploads/
 *.zip
+*.jpg
+*.jpeg
+.idea/
+.DS_Store
 
 
 # Byte-compiled / optimized / DLL files

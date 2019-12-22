@@ -29,4 +29,4 @@ print( response)
 if(response.payload[0].display_name=="fire_ant"):
     print("ヒアリだー！")
 else:
-    print("ヒアリだー！")
+    print("アリだー！")
