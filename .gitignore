@@ -8,6 +8,7 @@ projectkey.json
 *.jpeg
 .idea/
 .DS_Store
+deploy.sh
 
 
 # Byte-compiled / optimized / DLL files

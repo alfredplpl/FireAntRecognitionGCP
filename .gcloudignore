@@ -1,7 +1,15 @@
-.gcloudignore
-.gitignore
-#!include:.gitignore
-README.md
-ParamsDummy.py
+# ignore all temporally
+# https://scrapbox.io/pokutuna/.gcloudignore_%E3%81%A7%E5%85%A8%E9%83%A8_ignore_%E3%81%97%E3%81%A6_whitelist_%E3%81%AB%E3%81%97%E3%81%9F%E3%81%84
+/[!.]*
+/.?*
+
+# white list
 !Params.py
 !projectkey.json
+!models
+!models/fireantFGmodel.pickle
+!templates
+!templates/error.html
+!templates/result.html
+!main.py
+!requirements.txt
