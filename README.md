@@ -7,7 +7,7 @@ A sample architecture is as follow:
 ![block](images/block_diagram_en_with_automl_vision.png)
 
 - Create a Image classifier by AutoML Vision.
-    - You can learn how to make a classifier with official tutorial.
+    - You can learn how to make a classifier with [official tutorial](https://cloud.google.com/vision/automl/docs/?hl=en).
 - Deploy the model on AutoML Vision.
 - TBD
 
@@ -15,7 +15,6 @@ A sample architecture is as follow:
 A sample architecture is as follow:
 ![block](images/block_diagram_en.png)
 
-- Create a Image classifier by AutoML Vision.
-    - You can learn how to make a classifier with official tutorial.
-- Deploy the model on AutoML Vision.
+- Create a Image classifier by AutoKeras [on my Github page](https://github.com/alfredplpl/FireAntRecognitionByAutoML).
+    - You can learn how to make a classifier with [official tutorial](https://autokeras.com/).
 - TBD
