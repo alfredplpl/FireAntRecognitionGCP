@@ -1,22 +1,18 @@
 def recognizeByAutoKeras(request):
+    from flask import render_template
+
     # リクエストがポストかどうかの判別
     if request.method == 'POST':
         # ファイルがなかった場合の処理
         if 'image' not in request.files:
-            with open("./htmls/error.html", "r") as f:
-                resultHTML = f.read()
-                resultHTML=resultHTML.format(reason="ファイルが取得できないため")
-            return resultHTML
+            return render_template("error.html",reason="ファイルが取得できないため")
 
         # ファイルに関するデータの取り出し
         file = request.files['image']
 
         # ファイル名がなかった時の処理
         if file.filename == '':
-            with open("./htmls/error.html", "r") as f:
-                resultHTML = f.read()
-                resultHTML = resultHTML.format(reason="ファイル名が取得できないため")
-            return resultHTML
+            return render_template("error.html",reason="ファイル名が取得できないため")
 
         # ファイルの存在チェック
         if file:
@@ -48,24 +44,26 @@ def recognizeByAutoKeras(request):
 
             # AutoKerasで作ったモデルで画像を判定する
             img = cv2.imdecode(img_array, 1)
+
+            # center cropping
+            w = img.shape[1]
+            h = img.shape[0]
+            edge = np.min(img.shape)
+            img = img[(h - edge) // 2:(h + edge) // 2, (w - edge) // 2:(w + edge) // 2, :]
+            img = cv2.resize(img, (224, 224))
+
             img = img[np.newaxis, :, :, :]
             clf = pickle_from_file(Params.model_path)
             result = clf.predict(img)
             result=int(result[0])
+            resultString="ある" if result==1 else "ない"
 
-            with open("./htmls/result.html", "r") as f:
-                # 画像を含んだ結果をHTMLに埋め込む
-                # 画像を埋め込んだ理由はCloud FunctionsからStorageにアップロードできないように作られているためである
-                # （不正なアップローダー防止の対策とはいえ、めんどくさい仕様だ・・・
-                resultHTML = f.read()
-                resultString="ある" if result==1 else "ない"
-                resultHTML = resultHTML.format(image_string=imageString, class_name=f"class_{result}",
-                                               score="NaN",result=resultString)
-
-                return resultHTML
+            # 画像を含んだ結果をHTMLに埋め込む
+            # 画像を埋め込んだ理由はCloud FunctionsからStorageにアップロードできないように作られているためである
+            # （不正なアップローダー防止の対策とはいえ、めんどくさい仕様だ・・・
+            return render_template( "result.html",
+                                    image_string=imageString,
+                                    class_name=f"class_{result}",result=resultString)
 
     # GETなどの例外処理
-    with open("./htmls/error.html", "r") as f:
-        resultHTML = f.read()
-        resultHTML = resultHTML.format(reason="想定されていないため")
-        return resultHTML
+    return render_template("error.html", reason="想定されていないため")

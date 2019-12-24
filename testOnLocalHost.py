@@ -3,14 +3,14 @@ __version__ = "0.0.1"
 __license__ = "Apache License 2.0"
 
 from flask import Flask, request
-import recognizeByAutoKeras
+import main
 
 app = Flask(__name__)
 
 # ファイルを受け取る方法の指定
 @app.route('/',methods=["POST"])
 def serve():
-    return recognizeByAutoKeras.recognizeByAutoKeras(request)
+    return main.recognizeByAutoKeras(request)
 
 
 if __name__ == '__main__':
